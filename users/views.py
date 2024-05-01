@@ -47,3 +47,6 @@ def profile(request):
     return render(request, 'users/profile.html', contest)
 
 
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse('index'))
