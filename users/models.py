@@ -1,8 +1,8 @@
-from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
+from django.db import models
 from django.urls import reverse
-from django.conf import settings
 from django.utils.timezone import now
 
 
@@ -28,17 +28,16 @@ class EmailVerification(models.Model):
         link = reverse('users:email_verification', kwargs={'email': self.user.email, 'code': self.code})
         verification_link = f'{settings.DOMAIN_NAME}{link}'
         subject = f'Account confirmation for {self.user.username}'
-        message = 'To confirm in the account for {}, follow the link{}'.format(
+        message = 'To confirm in the account for {}, follow the link {}'.format(
             self.user.email, verification_link
         )
         send_mail(
             subject=subject,
             message=message,
-            from_email='from@example.com',
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=[self.user.email],
             fail_silently=False
         )
 
     def is_expired(self):
         return True if now() >= self.expiration else False
-
