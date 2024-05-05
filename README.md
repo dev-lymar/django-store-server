@@ -4,6 +4,7 @@
 
 - [How to run the project](#how-to-run-the-project)
 - [Project Description](#project-description)
+- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -80,6 +81,13 @@ Key Features:
    - Simple cart and order tracking.
 
 ***Our goal is to create a reliable platform for pleasant and secure online shopping experiences.***
+
+### Testing
+
+To run the tests, run the following command:
+   ```
+   ./manage.py test . 
+   ```
 
 ### Contributing
 
