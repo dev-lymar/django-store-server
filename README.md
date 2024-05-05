@@ -10,6 +10,15 @@
 
 ### How to run the project
 
+**Pre-requisites**
+
+Before starting the project setup, ensure that you have the following installed and running on your machine:
+
+- **Redis**: This project utilizes Redis as a message broker. Ensure Redis is installed and running on your machine. You can download it from [here](https://redis.io/).
+- **PostgreSQL**: The project uses PostgreSQL as the database. Install and configure PostgreSQL on your machine. You can download it from [here](https://www.postgresql.org/).
+
+Once you have Redis and PostgreSQL set up and running, proceed with the following steps to run the project:
+
 **Setting Up and Running in a Virtual Environment**
 
 Ensure that your machine has the latest version of **Python** installed (tested with version 3.12).
@@ -55,8 +64,12 @@ Ensure that your machine has the latest version of **Python** installed (tested 
     ```
    ./manage.py loaddata products/fixtures/categories.json && ./manage.py loaddata products/fixtures/products.json
     ```
+8. Run Celery:
+   ```
+   celery -A proj store -l INFO
+   ```
 
-8. Run the project:
+9. Run the project:
 
     ```
     .\manage.py runserver
@@ -64,7 +77,7 @@ Ensure that your machine has the latest version of **Python** installed (tested 
 
    The test server will start and be accessible at `http://localhost/8000/`.
 
-9. To create a superuser, execute the following command (from the virtual environment) and follow the prompts:
+10. To create a superuser, execute the following command (from the virtual environment) and follow the prompts:
 
     ```
     python .\manage.py createsuperuser
