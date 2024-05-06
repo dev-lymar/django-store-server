@@ -3,5 +3,6 @@ exclude =
     migrations
     .venv
     .penv
+    ./venv
 
 max-line-length = 120
