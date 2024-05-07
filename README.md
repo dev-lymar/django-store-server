@@ -32,6 +32,10 @@ Save the webhook signing secret that is output in the terminal:
    ```
 Store this secret in your `.env` file as the variable `STRIPE_WEBHOOK_SECRET`.
 
+**Important**: Each time you run the command stripe listen `--forward-to 127.0.0.1:8000/webhook/stripe/`, 
+the webhook signing secret **STRIPE_WEBHOOK_SECRET** will change. 
+You need to manually update this secret in your `.env` file each time it changes.
+
 Additionally, create a `.env` file in the root directory based on the provided `.env.example`. Fill in your own data and rename the file to `.env`.
 
 Please note that the Django secret key used in the `.env.example` is just an example. You can generate a new key using the following command:
