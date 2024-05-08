@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-{% load static cache %}
+{% load static cache  humanize %}
 
 {% block css %}
     <link href="/static/vendor/css/products.css" rel="stylesheet">
@@ -54,7 +54,7 @@
 
             <div class="row">
 
-                {% cache 30 object_list %}
+                {% cache 2 object_list %}
                     {% for product in object_list %}
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="card h-100">
@@ -67,13 +67,13 @@
                                     <h4 class="card-title">
                                         <a href="#">{{ product.name }}</a>
                                     </h4>
-                                    <h5>{{ product.price }} руб.</h5>
+                                    <h5>{{ product.price|intcomma }} rub.</h5>
                                     <p class="card-text">{{ product.description }}</p>
                                 </div>
                                 <div class="card-footer text-center">
                                     <a class="btn btn-outline-success"
                                        href="{% url 'products:basket_add' product.id %}">
-                                        Отправить в корзину
+                                        Add to Basket
                                     </a>
 
                                 </div>
@@ -90,7 +90,7 @@
                                 <a class="page-link"
                                    href="{% if page_obj.has_previous %} {% url 'products:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
                                    tabindex="-1" aria-disabled="true">
-                                    Предыдущая
+                                    Previous
                                 </a>
                             </li>
                             {% for page in paginator.page_range %}
@@ -103,7 +103,7 @@
                             <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
                                 <a class="page-link"
                                    href="{% if page_obj.has_next %} {% url 'products:paginator' page_obj.next_page_number %} {% else %} # {% endif %}">
-                                    Следующая
+                                    Next
                                 </a>
                             </li>
                         </ul>
@@ -120,7 +120,7 @@
 {% block footer %}
     <footer class="py-5 bg-dark">
     <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; Store 2022</p>
+        <p class="m-0 text-center text-white">Copyright © Store 2024</p>
     </div>
     <!-- /.container -->
 </footer>

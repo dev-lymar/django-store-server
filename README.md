@@ -16,8 +16,36 @@ Before starting the project setup, ensure that you have the following installed 
 
 - **Redis**: This project utilizes Redis as a message broker. Ensure Redis is installed and running on your machine. You can download it from [here](https://redis.io/).
 - **PostgreSQL**: The project uses PostgreSQL as the database. Install and configure PostgreSQL on your machine. You can download it from [here](https://www.postgresql.org/).
+- **Stripe CLI**: The quickest way to develop and test webhooks locally is with the Stripe CLI.
 
-Once you have Redis and PostgreSQL set up and running, proceed with the following steps to run the project:
+As a first step, follow the install guide for [Stripe CLI](https://stripe.com/docs/stripe-cli).
+
+Once you have the Stripe CLI installed and have completed the login process, you’re ready to move on to the next step.
+
+After installing Stripe CLI, run the following command in your terminal:
+   ```
+   stripe listen --forward-to 127.0.0.1:8000/webhook/stripe/
+   ```
+Save the webhook signing secret that is output in the terminal:
+   ```
+   Your webhook signing secret is whsec_ ... (^C to quit)
+   ```
+Store this secret in your `.env` file as the variable `STRIPE_WEBHOOK_SECRET`.
+
+**Important**: Each time you run the command `stripe listen --forward-to 127.0.0.1:8000/webhook/stripe/`, 
+the webhook signing secret **STRIPE_WEBHOOK_SECRET** will change. 
+You need to manually update this secret in your `.env` file each time it changes.
+
+Additionally, create a `.env` file in the root directory based on the provided `.env.example`. Fill in your own data and rename the file to `.env`.
+
+Please note that the Django secret key used in the `.env.example` is just an example. You can generate a new key using the following command:
+
+   ```
+   from django.core.management.utils import get_random_secret_key
+   
+   print(get_random_secret_key())
+   ```
+Once you have Redis, PostgreSQL, Stripe CLI, and your .env file set up, proceed with the following steps to run the project:
 
 **Setting Up and Running in a Virtual Environment**
 
@@ -66,7 +94,7 @@ Ensure that your machine has the latest version of **Python** installed (tested 
     ```
 8. Run Celery:
    ```
-   celery -A proj store -l INFO
+   celery -A store worker -l INFO
    ```
 
 9. Run the project:
