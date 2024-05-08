@@ -32,7 +32,7 @@ Save the webhook signing secret that is output in the terminal:
    ```
 Store this secret in your `.env` file as the variable `STRIPE_WEBHOOK_SECRET`.
 
-**Important**: Each time you run the command stripe listen `--forward-to 127.0.0.1:8000/webhook/stripe/`, 
+**Important**: Each time you run the command `stripe listen --forward-to 127.0.0.1:8000/webhook/stripe/`, 
 the webhook signing secret **STRIPE_WEBHOOK_SECRET** will change. 
 You need to manually update this secret in your `.env` file each time it changes.
 
@@ -94,7 +94,7 @@ Ensure that your machine has the latest version of **Python** installed (tested 
     ```
 8. Run Celery:
    ```
-   celery -A proj store -l INFO
+   celery -A store worker -l INFO
    ```
 
 9. Run the project:
