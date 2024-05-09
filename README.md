@@ -1,3 +1,8 @@
+[![Python](https://img.shields.io/badge/-Python-464646?style=for-the-badge&logo=Python)](https://www.python.org/)
+[![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-464646?style=for-the-badge&logo=PostgreSQL)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/-Redis-464646?style=for-the-badge&logo=Redis)](https://redis.io/)
+[![Celery](https://img.shields.io/badge/-Celery-464646?style=for-the-badge&logo=Celery)](https://docs.celeryq.dev/en/stable/)
+
 # STORE-SERVER
 
 ## Table of Contents
