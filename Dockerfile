@@ -11,8 +11,7 @@ COPY requirements.txt /store/
 RUN pip install --upgrade pip \
  && pip install -r requirements.txt
 
-RUN adduser --disabled-password store-user
-
-USER store-user
+RUN adduser --disabled-password celery-user
+USER celery-user
 
 COPY . .
