@@ -22,6 +22,7 @@ services:
 
   web:
     build: .
+    user: docker-user
     env_file: .env
     ports:
       - "8000:8000"
@@ -43,7 +44,7 @@ services:
 
   celery:
       build: .
-      user: celery-user
+      user: docker-user
       command: celery -A store worker -l info
       volumes:
         - .:/store
