@@ -1,0 +1,20 @@
+# Exclude editor local settings
+.vscode
+.DS_Store
+
+# Exclude files and directories created by Git
+.git
+
+# Exclude Python virtual environment
+.venv
+env
+
+# Exclude environment and configuration files
+.env
+
+# Exclude temporary and cached Python files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python

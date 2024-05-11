@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16.2-alpine3.18
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - store
+
+  web:
+    build: .
+    user: docker-user
+    env_file: .env
+    ports:
+      - "8000:8000"
+    command: sh entrypoint.sh
+    restart: on-failure
+    volumes:
+      - static_volume:/store/static/
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - store
+
+  redis:
+    image: redis:7.2.4-alpine
+    hostname: redis
+    networks:
+      - store
+
+  celery:
+      build: .
+      user: docker-user
+      command: celery -A store worker -l info
+      volumes:
+        - .:/store
+      links:
+        - redis
+      depends_on:
+        - redis
+        - db
+        - web
+      restart: on-failure
+      env_file:
+        - .env
+      environment:
+        - POSTGRES_DB=${DATABASE_NAME}
+        - POSTGRES_USER=${DATABASE_USER}
+        - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      networks:
+        - store
+
+  nginx:
+    image: nginx:stable-alpine3.17-slim
+    restart: on-failure
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/store/static/
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - store
+
+networks:
+  store:
+
+volumes:
+  static_volume:
+  postgres_data:

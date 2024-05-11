@@ -5,9 +5,9 @@ django-debug-toolbar==4.3.0
 django-environ==0.11.2
 django-extensions==3.2.3
 flake8==7.0.0
-isort==5.13.2
+gunicorn==22.0.0
 pillow==10.3.0
 psycopg2-binary==2.9.9
 redis==5.0.4
+ruff==0.4.4
 stripe==9.5.0
-
