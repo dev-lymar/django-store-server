@@ -7,12 +7,12 @@ from django.utils.timezone import now
 
 
 class User(AbstractUser):
-    image = models.ImageField(upload_to='users_images', null=True, blank=True)
+    image = models.ImageField(upload_to="users_images", null=True, blank=True)
     is_verified_email = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
 
 class EmailVerification(models.Model):
@@ -22,21 +22,19 @@ class EmailVerification(models.Model):
     expiration = models.DateTimeField()
 
     def __str__(self):
-        return f'EmailVerification object for {self.user.email}'
+        return f"EmailVerification object for {self.user.email}"
 
     def send_verification_email(self):
-        link = reverse('users:email_verification', kwargs={'email': self.user.email, 'code': self.code})
-        verification_link = f'{settings.DOMAIN_NAME}{link}'
-        subject = f'Account confirmation for {self.user.username}'
-        message = 'To confirm in the account for {}, follow the link {}'.format(
-            self.user.email, verification_link
-        )
+        link = reverse("users:email_verification", kwargs={"email": self.user.email, "code": self.code})
+        verification_link = f"{settings.DOMAIN_NAME}{link}"
+        subject = f"Account confirmation for {self.user.username}"
+        message = "To confirm in the account for {}, follow the link {}".format(self.user.email, verification_link)
         send_mail(
             subject=subject,
             message=message,
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[self.user.email],
-            fail_silently=False
+            fail_silently=False,
         )
 
     def is_expired(self):

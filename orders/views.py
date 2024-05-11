@@ -21,19 +21,19 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SuccessTemplateView(TitleMixin, TemplateView):
-    template_name = 'orders/success.html'
-    title = 'Store - Thank you for the order!'
+    template_name = "orders/success.html"
+    title = "Store - Thank you for the order!"
 
 
 class CanceledTemplateView(TemplateView):
-    template_name = 'orders/canceled.html'
+    template_name = "orders/canceled.html"
 
 
 class OrderListView(TitleMixin, ListView):
-    template_name = 'orders/orders.html'
-    title = 'Store - Orders'
+    template_name = "orders/orders.html"
+    title = "Store - Orders"
     queryset = Order.objects.all()
-    ordering = ('-created')
+    ordering = "-created"
 
     def get_queryset(self):
         queryset = super(OrderListView, self).get_queryset()
@@ -41,30 +41,30 @@ class OrderListView(TitleMixin, ListView):
 
 
 class OrderDetailView(DetailView):
-    template_name = 'orders/order.html'
+    template_name = "orders/order.html"
     model = Order
 
     def get_context_data(self, **kwargs):
         context = super(OrderDetailView, self).get_context_data(**kwargs)
-        context['title'] = f'Store - Order #{self.object.id}'
+        context["title"] = f"Store - Order #{self.object.id}"
         return context
 
 
 class OrderCreateView(TitleMixin, CreateView):
-    template_name = 'orders/order-create.html'
+    template_name = "orders/order-create.html"
     form_class = OrderForm
-    success_url = reverse_lazy('orders:order_create')
-    title = 'Store - Order Checkout'
+    success_url = reverse_lazy("orders:order_create")
+    title = "Store - Order Checkout"
 
     def post(self, request, *args, **kwargs):
         super(OrderCreateView, self).post(request, *args, **kwargs)
         baskets = Basket.objects.filter(user=self.request.user)
         checkout_session = stripe.checkout.Session.create(
             line_items=baskets.stripe_products(),
-            metadata={'order_id': self.object.id},
-            mode='payment',
-            success_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_success')),
-            cancel_url='{}{}'.format(settings.DOMAIN_NAME, reverse('orders:order_canceled')),
+            metadata={"order_id": self.object.id},
+            mode="payment",
+            success_url="{}{}".format(settings.DOMAIN_NAME, reverse("orders:order_success")),
+            cancel_url="{}{}".format(settings.DOMAIN_NAME, reverse("orders:order_canceled")),
         )
         return HttpResponseRedirect(checkout_session.url, status=HTTPStatus.SEE_OTHER)
 
@@ -76,13 +76,11 @@ class OrderCreateView(TitleMixin, CreateView):
 @csrf_exempt
 def stripe_webhook_view(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     event = None
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, settings.STRIPE_WEBHOOK_SECRET)
     except ValueError:
         # Invalid payload
         return HttpResponse(status=400)
@@ -91,8 +89,8 @@ def stripe_webhook_view(request):
         return HttpResponse(status=400)
 
     # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
 
         # Fulfill the purchase...
         fulfill_order(session)
