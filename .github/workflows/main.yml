@@ -14,3 +14,8 @@ jobs:
         run: flake8 .
       - name: Check Ruff
         run: ruff check .
+
+  build:
+    needs: linting
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
