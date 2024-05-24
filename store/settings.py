@@ -17,6 +17,7 @@ import environ
 env = environ.Env(
     DEBUG=(bool),
     SECRET_KEY=(str),
+    ALLOWED_HOSTS=(list, []),
     DOMAIN_NAME=(str),
     REDIS_HOST=(str),
     REDIS_PORT=(str),
@@ -50,7 +51,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 DOMAIN_NAME = env("DOMAIN_NAME")
 
