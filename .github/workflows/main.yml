@@ -18,10 +18,9 @@ jobs:
   push_to_docker_hub:
     needs: linting
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v2.316.1
+        uses: actions/checkout@v4.1.4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -34,8 +33,8 @@ jobs:
 
 
       - name: Push project
-        uses: docker/build-push-action@v2.316.1
+        uses: docker/build-push-action@v2
         with:
-          context: ./project
+          context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/django-store-server:latest
