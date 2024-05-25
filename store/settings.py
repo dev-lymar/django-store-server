@@ -18,6 +18,7 @@ env = environ.Env(
     DEBUG=(bool),
     SECRET_KEY=(str),
     ALLOWED_HOSTS=(list, []),
+    CSRF_TRUSTED_ORIGINS=(list, []),
     DOMAIN_NAME=(str),
     REDIS_HOST=(str),
     REDIS_PORT=(str),
@@ -52,6 +53,8 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
 
 DOMAIN_NAME = env("DOMAIN_NAME")
 
