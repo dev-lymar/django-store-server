@@ -18,6 +18,7 @@ jobs:
   deploy:
     needs: linting
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v2
     - name: Copy repository contents via scp
