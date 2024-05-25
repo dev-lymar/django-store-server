@@ -44,6 +44,7 @@ jobs:
           sudo cat <<EOF > .env
           DEBUG=${{ secrets.DEBUG }}
           ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
+          DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}
           DATABASE_NAME=${{ secrets.DATABASE_NAME }}
           DATABASE_USER=${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
@@ -57,6 +58,9 @@ jobs:
           EMAIL_USE_SSL=${{ secrets.EMAIL_USE_SSL }}
           EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+          STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }}
+          STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}
           EOF
     - name: Executing remote command
       uses: appleboy/ssh-action@master
