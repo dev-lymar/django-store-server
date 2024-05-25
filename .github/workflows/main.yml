@@ -1,0 +1,79 @@
+name: CI/CD Workflow
+
+on: push
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.4
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Check Flake8
+        run: flake8 .
+      - name: Check Ruff
+        run: ruff check .
+
+  deploy:
+    needs: linting
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Copy repository contents via scp
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSHKEY }}
+        source: "."
+        target: "/var/www/mywebsite"
+    - name: Create .env file on remote server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSHKEY }}
+        script: |
+          cd /var/www/mywebsite
+          sudo rm -f .env
+          sudo touch .env
+          sudo chmod 666 .env
+          sudo cat <<EOF > .env
+          DEBUG=${{ secrets.DEBUG }}
+          ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
+          CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }}
+          DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}
+          DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+          DATABASE_USER=${{ secrets.DATABASE_USER }}
+          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_HOST=${{ secrets.DATABASE_HOST }}
+          DATABASE_PORT=${{ secrets.DATABASE_PORT }}
+          SECRET_KEY=${{ secrets.SECRET_KEY }}
+          REDIS_HOST=${{ secrets.REDIS_HOST }}
+          REDIS_PORT=${{ secrets.REDIS_PORT }}
+          EMAIL_HOST=${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT=${{ secrets.EMAIL_PORT }}
+          EMAIL_USE_SSL=${{ secrets.EMAIL_USE_SSL }}
+          EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}
+          STRIPE_PUBLIC_KEY=${{ secrets.STRIPE_PUBLIC_KEY }}
+          STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          SUPERUSER_USERNAME=${{ secrets.SUPERUSER_USERNAME }}
+          SUPERUSER_EMAIL=${{ secrets.SUPERUSER_EMAIL }}
+          SUPERUSER_PASSWORD=${{ secrets.SUPERUSER_PASSWORD }}
+          EOF
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSHKEY }}
+        script: |
+          cd /var/www/mywebsite
+          docker-compose up -d --build
