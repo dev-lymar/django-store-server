@@ -1,9 +1,15 @@
-from django.urls import path
+from django.urls import path, include
 
-from api.views import ProductModelViewSet
+from rest_framework import routers
+
+from api.views import ProductModelViewSet, BasketModelViewSet
 
 app_name = "api"
 
+router = routers.DefaultRouter()
+router.register(r"products", ProductModelViewSet)
+router.register(r"baskets", BasketModelViewSet)
+
 urlpatterns = [
-    path("product-list/", ProductModelViewSet.as_view(), name="product_list"),
+    path("", include(router.urls)),
 ]
